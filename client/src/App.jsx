@@ -4,7 +4,6 @@ import { useEffect } from "react";
 // Auth Pages
 import LoginPage from "./pages/auth/LoginPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
 // Dashboard Layouts
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -33,13 +32,19 @@ import ProjectsPage from "./pages/admin/ProjectsPage";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";
+import DemoHomePage from "./pages/DemoHomePage";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         {/* Auth Routes */}
+<<<<<<<<< Temporary merge branch 1
+        <Route path="/" element={<DemoHomePage />} /> //demo home page only testing auth fun
+
+=========
         <Route path="/" element={<Navigate to="/login" replace />} />
+>>>>>>>>> Temporary merge branch 2
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />

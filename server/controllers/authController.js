@@ -53,18 +53,18 @@ export const logout = asyncHandler(async (req, res) => {
   }).json({ success: true, message: "User logged out successfully" });
 });
 
-export const forgotPassword = asyncHandler(async (req, res, next) => {
+export const forgotPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return res.status(404).json({ error: "User not found with this email" });
   }
 
   const resetToken = user.getResetPasswordToken();
-
+  
   await user.save({ validateBeforeSave: false });
 
-  const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
-
+  const resetPasswordUrl =
+    ` ${process.env.FRONTEND_URL}/reset-password?token=${resetToken} `;
   const message = generateForgotPasswordEmailTemplate(resetPasswordUrl);
 
   try {
@@ -77,6 +77,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
       success: true,
       message: `Email send to ${user.email} successfully`
     });
+
   } catch (error) {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
@@ -85,7 +86,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
-export const resetPassword = asyncHandler(async (req, res, next) => {
+export const resetPassword = asyncHandler(async (req, res) => {
   const { token } = req.params;
   const resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
 
