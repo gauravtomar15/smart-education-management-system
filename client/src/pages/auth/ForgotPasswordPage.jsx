@@ -5,9 +5,6 @@ import { Mail, ArrowLeft, Loader, CheckCircle } from "lucide-react";
 import { forgotPassword } from "../../store/slices/authSlice";
 
 const ForgotPasswordPage = () => {
-<<<<<<< HEAD
-  return <></>;
-=======
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -51,7 +48,7 @@ const ForgotPasswordPage = () => {
             <span className="font-semibold">{email}</span>.
           </p>
           <Link
-            to="/sign-in"
+            to="/login"
             className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-full font-medium transition"
           >
             Back to Login
@@ -133,7 +130,6 @@ const ForgotPasswordPage = () => {
       </div>
     </div>
   );
->>>>>>> a40137111fa8749dba5da2ab922741bfb3cf6212
 };
 
 export default ForgotPasswordPage;

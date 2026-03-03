@@ -94,14 +94,6 @@ const LoginPage = () => {
   }, [authUser]);
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500 rounded-full mb-4 ">
-            <BookOpen className="w-8 h-8 text-white" />
-=======
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-700 via-purple-700 to-indigo-900 px-4 sm:px-6 lg:px-8 py-10">
       <div className="w-full max-w-md sm:max-w-3xl xl:max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
         {/* LEFT SIDE - Form */}
@@ -109,12 +101,11 @@ const LoginPage = () => {
           {/* Heading */}
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 tracking-tight">
-              Sign In
+              Login
             </h1>
             <p className="text-gray-500 mt-2 text-sm sm:text-base">
               Welcome back! Please enter your details
             </p>
->>>>>>> a40137111fa8749dba5da2ab922741bfb3cf6212
           </div>
 
           {errors.general && (
@@ -198,7 +189,7 @@ const LoginPage = () => {
           {/* Forgot Password */}
           <div className="text-right mb-8">
             <Link
-              to="/forgot-password"
+              to="/password/forgot"
               className="text-sm text-indigo-600 hover:underline"
             >
               Forgot your password?
@@ -214,10 +205,10 @@ const LoginPage = () => {
             {isLoggingIn ? (
               <div className="flex justify-center items-center gap-2">
                 <Loader className="animate-spin h-4 w-4 text-white" />
-                Signing in...
+                Login...
               </div>
             ) : (
-              "Sign In"
+              "Login"
             )}
           </button>
 
