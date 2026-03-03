@@ -1,6 +1,7 @@
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import * as userServices from '../services/userService.js'
 
+// student controllers 
 export const createStudent = asyncHandler(async (req, res) => {
     const { name, email, password, department } = req.body;
     if (!name || !password || !email || !department) {
@@ -37,7 +38,7 @@ export const deleteStudent = asyncHandler(async (req, res) => {
         return res.status(404).json({ error: "Student not found" });
     }
     if (user.role !== "Student") {
-        return res.status(400).json({ error: "User is not a student"});
+        return res.status(400).json({ error: "User is not a student" });
     }
 
     await userServices.deleteUser(id);
@@ -47,6 +48,7 @@ export const deleteStudent = asyncHandler(async (req, res) => {
     })
 });
 
+// teacher controllers 
 export const createTeacher = asyncHandler(async (req, res) => {
     const { name, email, password, department, maxStudents, expertise } = req.body;
     if (!name || !password || !email || !department || !maxStudents || !expertise) {
@@ -105,11 +107,13 @@ export const deleteTeacher = asyncHandler(async (req, res) => {
     })
 });
 
+// get all users with neglect Admin
 export const getAllUsers = asyncHandler(async (req, res) => {
-    const { users } = await userServices.getAllUsers();
+    const users = await userServices.getAllUsers();
     res.status(200).json({
         success: true,
         message: "Users fetched successfully",
         data: { users }
     })
 });
+
