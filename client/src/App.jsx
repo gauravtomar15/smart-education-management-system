@@ -35,21 +35,73 @@ import { Loader } from "lucide-react";
 import DemoHomePage from "./pages/DemoHomePage";
 import Register from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import { getUser } from "./store/slices/authSlice";
 
 const App = () => {
+  const { authUser, isCheckingAuth } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+
+  const ProtectedRoute = ({ children, allowedRoles }) => {
+    if (!authUser) {
+      return <Navigate to={"/login"} replace />;
+    }
+
+    if (
+      allowedRoles?.length &&
+      authUser?.role &&
+      !allowedRoles.iscludes(authUser.role)
+    ) {
+      const redirectPath =
+        authUser.role === "Admin"
+          ? "/admin"
+          : authUser.role === "Teacher"
+            ? "/teacher"
+            : "/student";
+
+      return <Navigate to={redirectPath} replace />;
+    }
+
+    return children;
+  };
+
+  if (isCheckingAuth && !authUser) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
   return (
     <BrowserRouter>
       <Routes>
         {/* Auth Routes */}
-        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
         <Route path="/" element={<DemoHomePage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/Student" element={<StudentDashboard />} />
-        <Route path="/Admin" element={<AdminDashboard />} />
-        <Route path="/Teacher" element={<TeacherDashboard />} />
         <Route path="/password/forgot" element={<ForgotPasswordPage />} />
         <Route path="/password/reset/:token" element={<ResetPasswordPage />} />
+
+        {/* Admin Routes */}
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="students" element={<ManageStudents />} />
+          <Route path="teachers" element={<ManageTeachers />} />
+          <Route path="assign-supervisor" element={<AssignSupervisor />} />
+          <Route path="deadline" element={<DeadlinesPage />} />
+          <Route path="projects" element={<ProjectsPage />} />
+        </Route>
       </Routes>
       <ToastContainer theme="dark" />
     </BrowserRouter>
