@@ -34,7 +34,7 @@ import { ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";
 import DemoHomePage from "./pages/DemoHomePage";
 import Register from "./pages/auth/Register";
-import ResetPasswordPage from "./pages/auth/ResetPasswordPage copy";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
 const App = () => {
   return (
