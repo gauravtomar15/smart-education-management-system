@@ -2,6 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../lib/axios";
 import { toast } from "react-toastify";
 
+/* =============================
+   STUDENT API CALLS
+============================= */
+
 export const createStudent = createAsyncThunk(
   "createStudent",
   async (data, thunkAPI) => {
@@ -10,8 +14,9 @@ export const createStudent = createAsyncThunk(
       toast.success(res.data.message || "Student created successfully");
       return res.data.data.user;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to create student");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
+      const msg = error.response?.data?.message || "Failed to create student";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
     }
   }
 );
@@ -24,8 +29,9 @@ export const updateStudent = createAsyncThunk(
       toast.success(res.data.message || "Student updated successfully");
       return res.data.data.user;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update student");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
+      const msg = error.response?.data?.message || "Failed to update student";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
     }
   }
 );
@@ -34,25 +40,13 @@ export const deleteStudent = createAsyncThunk(
   "deleteStudent",
   async (id, thunkAPI) => {
     try {
-      const res = await axiosInstance.delete(`/admin/delete-student/${id}`);
-      toast.success(res.data.message || "Student deleted successfully");
+      await axiosInstance.delete(`/admin/delete-student/${id}`);
+      toast.success("Student deleted successfully");
       return id;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to delete student");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
-    }
-  }
-);
-
-export const getAllUsers = createAsyncThunk(
-  "getAllUsers",
-  async (id, thunkAPI) => {
-    try {
-      const res = await axiosInstance.get("/admin/users");
-      return res.data.data;
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to fetch users");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
+      const msg = error.response?.data?.message || "Failed to delete student";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
     }
   }
 );
@@ -65,8 +59,9 @@ export const createTeacher = createAsyncThunk(
       toast.success(res.data.message || "Teacher created successfully");
       return res.data.data.user;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to create teacher");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
+      const msg = error.response?.data?.message || "Failed to create teacher";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
     }
   }
 );
@@ -79,8 +74,9 @@ export const updateTeacher = createAsyncThunk(
       toast.success(res.data.message || "Teacher updated successfully");
       return res.data.data.user;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update teacher");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
+      const msg = error.response?.data?.message || "Failed to update teacher";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
     }
   }
 );
@@ -89,58 +85,93 @@ export const deleteTeacher = createAsyncThunk(
   "deleteTeacher",
   async (id, thunkAPI) => {
     try {
-      const res = await axiosInstance.delete(`/admin/delete-teacher/${id}`);
-      toast.success(res.data.message || "Teacher deleted successfully");
+      await axiosInstance.delete(`/admin/delete-teacher/${id}`);
+      toast.success("Teacher deleted successfully");
       return id;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to delete teacher");
-      return thunkAPI.rejectWithValue(error.response?.data?.message);
+      const msg = error.response?.data?.message || "Failed to delete teacher";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
+    }
+  }
+);
+
+export const getAllUsers = createAsyncThunk(
+  "admin/getAllUsers",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get("/admin/users");
+      return res.data.data.users;
+    } catch (error) {
+      const msg = error.response?.data?.message || "Failed to fetch users";
+      toast.error(msg);
+      return thunkAPI.rejectWithValue(msg);
     }
   }
 );
 
 const adminSlice = createSlice({
   name: "admin",
+
   initialState: {
-    students: [],
-    teachers: [],
-    projects: [],
     users: [],
+    projects: [],
     stats: null,
     loading: false,
     error: null,
   },
+
   reducers: {},
+
   extraReducers: builder => {
     builder
-      .addCase(createStudent.fulfilled, (state, action) => {
-        if (state.users) state.users.unshift(action.payload);
+      .addCase(getAllUsers.pending, state => {
+        state.loading = true;
       })
-      .addCase(updateStudent.fulfilled, (state, action) => {
-        if (state.users)
-          state.users.map(u =>
-            u._id === action.payload._id ? { ...u, ...action.payload } : u
-          );
-      })
-      .addCase(deleteStudent.fulfilled, (state, action) => {
-        if (state.users)
-          state.users = state.users.filter(u => u._id !== action.payload);
-      })
+
       .addCase(getAllUsers.fulfilled, (state, action) => {
-        state.users = action.payload.users;
+        state.loading = false;
+        state.users = action.payload;
       })
+
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(createStudent.fulfilled, (state, action) => {
+        state.users.unshift(action.payload);
+      })
+
+      .addCase(updateStudent.fulfilled, (state, action) => {
+        const index = state.users.findIndex(
+          user => user._id === action.payload._id
+        );
+
+        if (index !== -1) {
+          state.users[index] = action.payload;
+        }
+      })
+
+      .addCase(deleteStudent.fulfilled, (state, action) => {
+        state.users = state.users.filter(user => user._id !== action.payload);
+      })
+
       .addCase(createTeacher.fulfilled, (state, action) => {
-        if (state.users) state.users.unshift(action.payload);
+        state.users.unshift(action.payload);
       })
+
       .addCase(updateTeacher.fulfilled, (state, action) => {
-        if (state.users)
-          state.users.map(u =>
-            u._id === action.payload._id ? { ...u, ...action.payload } : u
-          );
+        const index = state.users.findIndex(
+          user => user._id === action.payload._id
+        );
+
+        if (index !== -1) {
+          state.users[index] = action.payload;
+        }
       })
       .addCase(deleteTeacher.fulfilled, (state, action) => {
-        if (state.users)
-          state.users = state.users.filter(u => u._id !== action.payload);
+        state.users = state.users.filter(user => user._id !== action.payload);
       });
   },
 });
