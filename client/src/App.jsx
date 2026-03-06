@@ -53,7 +53,7 @@ const App = () => {
     if (
       allowedRoles?.length &&
       authUser?.role &&
-      !allowedRoles.iscludes(authUser.role)
+      !allowedRoles.includes(authUser.role) // fixing the bug iscloudes thaaa ya per 
     ) {
       const redirectPath =
         authUser.role === "Admin"
@@ -91,7 +91,7 @@ const App = () => {
           path="/admin"
           element={
             <ProtectedRoute allowedRoles={["Admin"]}>
-              <DashboardLayout />
+              <DashboardLayout userRole={"Admin"}/>
             </ProtectedRoute>
           }
         >
