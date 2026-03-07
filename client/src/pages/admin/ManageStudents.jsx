@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleStudentModel } from "../../store/slices/popupSlice";
 import {
-  createStudent,
   deleteStudent,
   getAllUsers,
   updateStudent,
@@ -87,8 +86,6 @@ const ManageStudents = () => {
     e.preventDefault();
     if (editingStudent) {
       dispatch(updateStudent({ id: editingStudent._id, data: formData }));
-    } else {
-      dispatch(createStudent(formData));
     }
     handleCloseModel();
   };
@@ -288,7 +285,7 @@ const ManageStudents = () => {
                     <th className="px-6 py-3">Department & Year</th>
                     <th className="px-6 py-3">Supervisor</th>
                     <th className="px-6 py-3">Project Title</th>
-                    <th className="px-6 py-3 text-center">Action</th>
+                    <th className="px-6 py-3 text-center">Actions</th>
                   </tr>
                 </thead>
 
@@ -302,12 +299,6 @@ const ManageStudents = () => {
                           <span className="text-xs text-slate-500">
                             {student.email}
                           </span>
-
-                          {student.studentId && (
-                            <span className="text-xs text-slate-400">
-                              ID: {student.studentId}
-                            </span>
-                          )}
                         </div>
                       </td>
 
@@ -436,7 +427,7 @@ const ManageStudents = () => {
                   >
                     <option value="Computer Science">Computer Science</option>
                     <option value="Mathematics">Mathematics</option>
-                    <option value="Data Science">Biology</option>
+                    <option value="Biology">Biology</option>
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>
                     <option value="Engineering">Engineering</option>
