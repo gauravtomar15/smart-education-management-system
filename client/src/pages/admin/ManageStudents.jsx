@@ -16,6 +16,7 @@ import {
   Search,
   AlertTriangle,
 } from "lucide-react";
+import AddStudent from "../../components/modal/AddStudent";
 
 const ManageStudents = () => {
   const { users, projects } = useSelector(state => state.admin);
@@ -435,9 +436,10 @@ const ManageStudents = () => {
                   >
                     <option value="Computer Science">Computer Science</option>
                     <option value="Mathematics">Mathematics</option>
-                    <option value="Data Science">Data Science</option>
+                    <option value="Data Science">Biology</option>
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>
+                    <option value="Engineering">Engineering</option>
                   </select>
                 </div>
 
@@ -504,6 +506,8 @@ const ManageStudents = () => {
             </div>
           </div>
         )}
+
+        {isCreateStudentModalOpen && <AddStudent />}
       </div>
     </>
   );
