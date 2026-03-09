@@ -21,7 +21,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "Student",
+    role: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -52,7 +52,6 @@ const LoginPage = () => {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
@@ -102,7 +101,7 @@ const LoginPage = () => {
           {/* Heading */}
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 tracking-tight">
-              Sign In
+              Login
             </h1>
             <p className="text-gray-500 mt-2 text-sm sm:text-base">
               Welcome back! Please enter your details
@@ -190,7 +189,7 @@ const LoginPage = () => {
           {/* Forgot Password */}
           <div className="text-right mb-8">
             <Link
-              to="/forgot-password"
+              to="/password/forgot"
               className="text-sm text-indigo-600 hover:underline"
             >
               Forgot your password?
@@ -206,10 +205,10 @@ const LoginPage = () => {
             {isLoggingIn ? (
               <div className="flex justify-center items-center gap-2">
                 <Loader className="animate-spin h-4 w-4 text-white" />
-                Signing in...
+                Login...
               </div>
             ) : (
-              "Sign In"
+              "Login"
             )}
           </button>
 
