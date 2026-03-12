@@ -32,11 +32,10 @@ import ProjectsPage from "./pages/admin/ProjectsPage";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";
-import DemoHomePage from "./pages/DemoHomePage";
-import Register from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import { getUser } from "./store/slices/authSlice";
 import { getAllUsers } from "./store/slices/adminSlice";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const { authUser, isCheckingAuth } = useSelector(state => state.auth);
@@ -53,7 +52,7 @@ const App = () => {
   }, [authUser]);
   const ProtectedRoute = ({ children, allowedRoles }) => {
     if (!authUser) {
-      return <Navigate to={"/login"} replace />;
+      return <Navigate to={"/"} replace />;
     }
 
     if (
@@ -74,7 +73,15 @@ const App = () => {
     return children;
   };
 
-  if (isCheckingAuth && !authUser) {
+  // if (isCheckingAuth && !authUser) {
+  //   return (
+  //     <div className="flex justify-center items-center h-screen">
+  //       <Loader className="size-10 animate-spin" />
+  //     </div>
+  //   );
+  // }
+  // ya condition check kar ne ha 
+  if (isCheckingAuth) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader className="size-10 animate-spin" />
@@ -85,9 +92,9 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         {/* Auth Routes */}
-        <Route path="/" element={<DemoHomePage />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<LoginPage />} />
+        {/* 404 - Catch All */}
+        {/* <Route path="*" element={<NotFound />} /> */}
+        <Route path="/" element={<LoginPage />} />
         <Route path="/password/forgot" element={<ForgotPasswordPage />} />
         <Route path="/password/reset/:token" element={<ResetPasswordPage />} />
 
