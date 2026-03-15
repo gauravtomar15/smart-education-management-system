@@ -107,6 +107,50 @@ export const uploadFiles = createAsyncThunk(
   }
 );
 
+export const fetchDashboardStats = createAsyncThunk(
+  "fetchDashboardStats", // fixin the spealing  ""fetchDsahboardStats" and check
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(
+        "/student/fetchDashboardStats")
+      return res.data.data || res.data
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "failed to fetch student dashboard Stats ");
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const getFeedback = createAsyncThunk(
+  "getFeedback",
+  async (projectId, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(
+        `/student/feedback/:${projectId}`)
+      return res.data.data?.feedback || res.data.data || res.data
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "failed to feedback ");
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const downloadFile = createAsyncThunk(
+  "downloadfile",
+  async ({ projectId, fileId }, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(
+        `/student/download/${projectId}/${fileId}`,
+        { responseType: "blob" }
+      )
+      return { blob: res.data, projectId, fileId }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "failed to download file ");
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const studentSlice = createSlice({
   name: "student",
   initialState: {
@@ -137,6 +181,12 @@ const studentSlice = createSlice({
       .addCase(uploadFiles.fulfilled, (state, action) => {
         const newFiles = action.payload?.project?.files || action.payload || [];
         state.files = [...state.files, ...newFiles];
+      })
+      .addCase(getFeedback.fulfilled, (state, action) => {
+        state.feedback = action.payload || []
+      })
+      .addCase(fetchDashboardStats.fulfilled, (state, action) => {
+        state.dashboardStats = action.payload || []
       });
   },
 });

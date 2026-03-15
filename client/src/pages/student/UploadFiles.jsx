@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { fetchProject, uploadFiles } from "../../store/slices/studentSlice";
+import { downloadFile, fetchProject, uploadFiles } from "../../store/slices/studentSlice";
 import { Archive, File, FileCode, FilePlus, FileText } from "lucide-react";
 const UploadFiles = () => {
   const dispatch = useDispatch();
@@ -55,6 +55,21 @@ const UploadFiles = () => {
             : "text-slate-500";
     return <Icon className={`w-8 h-8 ${color}`} />;
   };
+
+  const handleDownloadFile = async (file) => {
+    if (!file?.projectId || !file.fileId) return
+    const res = await dispatch(
+      downloadFile({ projectId: file.projectId, fileId: file.fileId })
+    )
+    if (res.meta.requestStatus !== "fulfilled") return
+    const url = URL.createObjectURL(res.payload.blob)
+    const a = object.assign(document.createElement("a"), {
+      href: url,
+      download: file.name || "download",
+    })
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div className="space-y-6">
@@ -214,8 +229,12 @@ const UploadFiles = () => {
 
                       </div>
                     </div>
+                    {/* download btn  */}
+                    <div className="flex item-center space-x-2">
+                      <button className="btn-outline btn-small" 
+                      onClick={() => handleDownloadFile(file)}>Download</button>
+                    </div>
 
-                    <div className="btn-outline btn-small">Download</div>
                   </div>
                 ))
               } </div>

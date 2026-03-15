@@ -34,7 +34,7 @@ import { ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import { getUser } from "./store/slices/authSlice";
-import { getAllUsers } from "./store/slices/adminSlice";
+import { getAllProjects, getAllUsers } from "./store/slices/adminSlice";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -48,6 +48,7 @@ const App = () => {
   useEffect(() => {
     if (authUser?.role === "Admin") {
       dispatch(getAllUsers());
+      dispatch(getAllProjects());
     }
   }, [authUser]);
   const ProtectedRoute = ({ children, allowedRoles }) => {
