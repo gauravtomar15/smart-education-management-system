@@ -9,6 +9,8 @@ import studentRoutes from './router/studentRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import { setServers } from 'node:dns/promises';
+setServers(['1.1.1.1','8.8.8.8']);
 config();
 
 const __filename = fileURLToPath(import.meta.url);
